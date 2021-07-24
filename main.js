@@ -2,7 +2,8 @@ const appLists = document.querySelector(".app__lists");
 
 const form = document.querySelector(".app__form");
 const addInput = document.querySelector(".form__addInput");
-const addBtn = document.querySelector(".form__addBtn");
+
+let lists = [];
 
 // Delete item
 function deleteItem(event) {
@@ -31,6 +32,34 @@ function addList(event) {
   const deleteBtn = li.lastElementChild;
   deleteBtn.addEventListener("click", deleteItem);
 
+  lists.push({ id: Date.now(), item: newItem });
+  const jsonLists = JSON.stringify(lists);
+  localStorage.setItem("lists", jsonLists);
+
   appLists.appendChild(li);
 }
+
 form.addEventListener("submit", addList);
+
+window.addEventListener("load", () => {
+  const localLists = localStorage.getItem("lists");
+
+  if (localLists) {
+    lists = JSON.parse(localLists);
+    lists.forEach(list => {
+      const li = document.createElement("li");
+      li.setAttribute("class", "list");
+      li.innerHTML = `
+        <span class="list__item">${list.item}</span>
+        <button class="list__deleteBtn">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        `;
+
+      const deleteBtn = li.lastElementChild;
+      deleteBtn.addEventListener("click", deleteItem);
+
+      appLists.appendChild(li);
+    });
+  }
+});
