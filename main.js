@@ -5,10 +5,9 @@ const addInput = document.querySelector(".form__addInput");
 
 let lists = [];
 
-// Delete item
+// Delete item function
 function deleteItem() {
   const selectedItem = this.parentNode;
-
   lists = lists.filter(list => {
     return String(list.id) !== selectedItem.id;
   });
@@ -17,54 +16,51 @@ function deleteItem() {
   appLists.removeChild(selectedItem);
 }
 
-// Add item
-function addList(event) {
-  event.preventDefault();
-  const newItem = addInput.value;
-  addInput.value = "";
+// Make li tag function
+function makeLi(item, id) {
   const li = document.createElement("li");
   li.setAttribute("class", "list");
   li.innerHTML = `
-  <span class="list__item">${newItem}</span>
-  <button class="list__deleteBtn">
-    <i class="fas fa-trash-alt"></i>
-  </button>
-  `;
+    <span class="list__item">${item}</span>
+    <button class="list__deleteBtn">
+      <i class="fas fa-trash-alt"></i>
+    </button>
+    `;
 
   const deleteBtn = li.lastElementChild;
   deleteBtn.addEventListener("click", deleteItem);
 
-  const listId = Date.now();
-  li.id = listId;
-  lists.push({ id: listId, item: newItem });
-  const jsonLists = JSON.stringify(lists);
-  localStorage.setItem("lists", jsonLists);
-
+  li.id = id;
   appLists.appendChild(li);
+
+  return li;
 }
 
+// Add item function
+function addList(event) {
+  event.preventDefault();
+  const newItem = addInput.value;
+  const itemId = Date.now();
+
+  addInput.value = "";
+
+  lists.push({ id: itemId, item: newItem });
+  localStorage.setItem("lists", JSON.stringify(lists));
+
+  const li = makeLi(newItem, itemId);
+}
+
+// Form event
 form.addEventListener("submit", addList);
 
+// Load lists
 window.addEventListener("load", () => {
   const localLists = localStorage.getItem("lists");
 
   if (localLists) {
     lists = JSON.parse(localLists);
     lists.forEach(list => {
-      const li = document.createElement("li");
-      li.setAttribute("class", "list");
-      li.id = list.id;
-      li.innerHTML = `
-        <span class="list__item">${list.item}</span>
-        <button class="list__deleteBtn">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-        `;
-
-      const deleteBtn = li.lastElementChild;
-      deleteBtn.addEventListener("click", deleteItem);
-
-      appLists.appendChild(li);
+      makeLi(list.item, list.id);
     });
   }
 });
