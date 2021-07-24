@@ -51,12 +51,16 @@ button {
 .list__deleteBtn:hover {
   color: red;
 }
-.app__addInput {
+
+.app__form {
+  height: 20%;
+}
+.form__addInput {
   width: 100%;
-  height: 5%;
+  height: 25%;
 }
 
-.app__addBtn i {
+.form__addBtn i {
   padding-top: 0.5rem;
   font-size: 3rem;
 }
