@@ -6,23 +6,15 @@ const addInput = document.querySelector(".form__addInput");
 let lists = [];
 
 // Delete item
-function deleteItem(event) {
-  const selectedItem = event.target;
-  if (selectedItem.className === "fas fa-trash-alt") {
-    lists = lists.filter(list => {
-      return String(list.id) !== selectedItem.parentNode.parentNode.id;
-    });
+function deleteItem() {
+  const selectedItem = this.parentNode;
 
-    localStorage.setItem("lists", JSON.stringify(lists));
-    appLists.removeChild(selectedItem.parentNode.parentNode);
-  } else {
-    lists = lists.filter(list => {
-      return String(list.id) !== selectedItem.parentNode.id;
-    });
+  lists = lists.filter(list => {
+    return String(list.id) !== selectedItem.id;
+  });
 
-    localStorage.setItem("lists", JSON.stringify(lists));
-    appLists.removeChild(selectedItem.parentNode);
-  }
+  localStorage.setItem("lists", JSON.stringify(lists));
+  appLists.removeChild(selectedItem);
 }
 
 // Add item
