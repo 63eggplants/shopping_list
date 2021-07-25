@@ -1,4 +1,8 @@
 /* Univeral tags */
+
+* {
+  box-sizing: border-box;
+}
 body {
   background-color: #cfd3df;
   text-align: center;
@@ -29,6 +33,7 @@ button {
   border-radius: 20px;
   background: linear-gradient(to bottom right, #dfc0d8, #93bced);
   margin-top: 50px;
+  padding-bottom: 20px;
 }
 
 .app__title {
@@ -37,30 +42,44 @@ button {
   padding-top: 1rem;
 }
 
-.app__lists {
+.app__items {
   height: 70%;
   background: #f2f0f6;
+  overflow-y: auto;
 }
 
-.list {
+.item {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1.5rem;
+  font-size: 20px;
 }
 
-.list__deleteBtn:hover {
+.item__deleteBtn {
+  font-size: 16px;
+  transition: all 200ms ease-in;
+}
+.item__deleteBtn:hover {
   color: red;
+  transform: scale(1.1);
 }
 
 .app__form {
   height: 20%;
 }
-.form__addInput {
+.form__input {
   width: 100%;
-  height: 25%;
+  height: 32px;
+  font-size: 24px;
+  padding: 8px 20px;
 }
 
-.form__addBtn i {
-  padding-top: 0.5rem;
+.form__addBtn {
+  padding: 0.5rem 0;
   font-size: 3rem;
+  transition: all 200ms ease-in;
+}
+
+.form__addBtn:hover {
+  transform: scale(1.1);
 }

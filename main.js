@@ -1,66 +1,76 @@
-const appLists = document.querySelector(".app__lists");
+const items = document.querySelector(".app__items");
 
 const form = document.querySelector(".app__form");
-const addInput = document.querySelector(".form__addInput");
+const input = document.querySelector(".form__input");
 
-let lists = [];
+let itemsArr = [];
+
+// Add item function
+function onAdd(event) {
+  event.preventDefault();
+  const newItem = input.value;
+
+  if (input.value == "") {
+    input.focus();
+    return;
+  }
+
+  const newId = Date.now();
+
+  itemsArr.push({ id: newId, name: newItem });
+  localStorage.setItem("items", JSON.stringify(itemsArr));
+
+  const li = createLi(newItem, newId);
+
+  input.value = "";
+
+  li.scrollIntoView();
+}
 
 // Delete item function
-function deleteItem() {
+function onDelete() {
   const selectedItem = this.parentNode;
-  lists = lists.filter(list => {
-    return String(list.id) !== selectedItem.id;
+  itemsArr = itemsArr.filter(item => {
+    return String(item.id) !== selectedItem.id;
   });
 
-  localStorage.setItem("lists", JSON.stringify(lists));
-  appLists.removeChild(selectedItem);
+  localStorage.setItem("items", JSON.stringify(itemsArr));
+
+  items.removeChild(selectedItem);
 }
 
 // Make li tag function
-function makeLi(item, id) {
+function createLi(item, id) {
   const li = document.createElement("li");
-  li.setAttribute("class", "list");
+  li.setAttribute("class", "item");
   li.innerHTML = `
-    <span class="list__item">${item}</span>
-    <button class="list__deleteBtn">
-      <i class="fas fa-trash-alt"></i>
-    </button>
-    `;
+      <span class="item__name">${item}</span>
+      <button class="item__deleteBtn">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+      `;
 
   const deleteBtn = li.lastElementChild;
-  deleteBtn.addEventListener("click", deleteItem);
+  deleteBtn.addEventListener("click", onDelete);
 
   li.id = id;
-  appLists.appendChild(li);
+  items.appendChild(li);
 
   return li;
 }
 
-// Add item function
-function addList(event) {
-  event.preventDefault();
-  const newItem = addInput.value;
-  const itemId = Date.now();
-
-  addInput.value = "";
-
-  lists.push({ id: itemId, item: newItem });
-  localStorage.setItem("lists", JSON.stringify(lists));
-
-  const li = makeLi(newItem, itemId);
-}
-
 // Form event
-form.addEventListener("submit", addList);
+form.addEventListener("submit", onAdd);
 
 // Load lists
 window.addEventListener("load", () => {
-  const localLists = localStorage.getItem("lists");
+  input.focus();
+  const localItems = localStorage.getItem("items");
 
-  if (localLists) {
-    lists = JSON.parse(localLists);
-    lists.forEach(list => {
-      makeLi(list.item, list.id);
+  if (localItems) {
+    itemsArr = JSON.parse(localItems);
+    itemsArr.forEach(item => {
+      createLi(item.name, item.id);
     });
   }
 });
